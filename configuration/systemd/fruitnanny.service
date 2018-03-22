@@ -1,0 +1,18 @@
+[Unit]
+Description=Fruitnanny Baby Monitor
+After=network.target
+Requires=janus,nginx
+
+[Service]
+User=pi
+Type=simple
+ExecStart=/usr/local/bin/pm2 start server/app.js --name="fruitnanny"
+ExecStop=/usr/local/bin/pm2 stop fruitnanny
+LimitNOFILE=65536
+Restart=always
+KillSignal=SIGTERM
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+
