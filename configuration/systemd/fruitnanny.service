@@ -1,18 +1,22 @@
 [Unit]
 Description=Fruitnanny Baby Monitor
+Documentation=https://pm2.keymetrics.io/
 After=network.target
 Requires=janus,nginx
 
 [Service]
+Type=forking
 User=pi
-Type=simple
-ExecStart=/usr/local/bin/pm2 start server/app.js --name="fruitnanny"
-ExecStop=/usr/local/bin/pm2 stop fruitnanny
-LimitNOFILE=65536
-Restart=always
-KillSignal=SIGTERM
-KillMode=process
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/home/pi/.pm2
+PIDFile=/home/pi/.pm2/pm2.pid
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
 
 [Install]
 WantedBy=multi-user.target
-
