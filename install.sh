@@ -57,8 +57,12 @@ pip install xvfbwrapper
 # Download & install nodejs
 curl -sL https://deb.nodesource.com/setup_6.x | bash -
 apt install -y nodejs
+
 # Install nodejs process manager (PM2) for automatic nodejs app startup
 npm install pm2 -g
+sudo -u pi pm2 startup
+env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
+sudo -u pi pm2 save
 
 apt-get -y install python-gst-1.0 python-gobject xvfb pulseaudio dbus-x11
 
@@ -66,9 +70,6 @@ apt-get -y install python-gst-1.0 python-gobject xvfb pulseaudio dbus-x11
 cd /opt
 git clone $FN_REPO_URL
 chown -R pi:pi /opt/fruitnanny
-cd /opt/fruitnanny
-sudo -u pi npm install
-
 # Configure fruitnanny
 read -p "Enter your baby's name [Baby]: " baby_name
 if [ "$baby_name" == "" ]; then
@@ -81,7 +82,13 @@ read -p "Enter temperature unit (C/F) [C]: " temp_unit
 if [ "$temp_unit" == "" ]; then
     temp_unit=C
 fi
-# TODO: Update /opt/fruitnanny/fruitnanny_config.js
+# Update /opt/fruitnanny/fruitnanny_config.js
+sed -i "s/Matthew/${baby_name}/g" /opt/fruitnanny/fruitnanny_config.js
+sed -i "s!2016-03-15!${baby_birthdate}!g" /opt/fruitnanny/fruitnanny_config.js
+sed -i "s/\"temp_unit\": \"C\"/\"temp_unit\": \"${temp_unit}\"/g" /opt/fruitnanny/fruitnanny_config.js
+cd /opt/fruitnanny
+sudo -u pi npm install
+sudo -u pi pm2 start /opt/fruitnanny/server/app.js --name="fruitnanny"
 
 # Add the pi user to the pulse-access group
 adduser pi pulse-access
@@ -153,14 +160,6 @@ systemctl enable noise
 systemctl enable video
 systemctl enable janus
 
-# Install nodejs process manager (PM2) for automatic nodejs app startup
-#npm install pm2 -g
-# Run this as pi user?
-#sudo -u pi pm2 startup
-#env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
-# Run this as pi user?
-#sudo -u pi pm2 save
-
 # Install nginx & rtmp module from source
 apt-get -y install build-essential libpcre3 libpcre3-dev libssl-dev unzip
 wget -O /tmp/nginx.tgz http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz
@@ -188,9 +187,4 @@ sh -c "openssl passwd -apr1 >> /usr/local/nginx/conf/.htpasswd"
 
 systemctl enable nginx
 
-# TODO
-sudo -u pi pm2 start /opt/fruitnanny/server/app.js --name="fruitnanny"
-sleep 5s
-sudo -u pi pm2 save
-sudo -u pi pm2 kill
-echo "Installation successful - Starting Fruitnanny"
+echo "Installation successful - reboot to start Fruitnanny!"
