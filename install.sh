@@ -133,8 +133,7 @@ ln -s /opt/fruitnanny/configuration/janus/janus.transport.http.cfg /usr/local/et
 
 # Generate ssl certificates
 cd /usr/local/share/janus/certs
-# TODO: openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj "/C=/ST=/L=/O=/OU=/CN=" -keyout mycert.key -out mycert.pem
-openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout mycert.key -out mycert.pem
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj "/CN=www.fruitnanny.com" -keyout mycert.key -out mycert.pem
 
 # Enable access to GPIO without root
 adduser pi gpio
