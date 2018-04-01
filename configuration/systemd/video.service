@@ -9,7 +9,7 @@ ExecStart=/opt/fruitnanny/bin/video.sh
 LimitNOFILE=65536
 Restart=always
 KillSignal=SIGTERM
-KillMode=process
+KillMode=control-group
 
 [Install]
 WantedBy=multi-user.target
