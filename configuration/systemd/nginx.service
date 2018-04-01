@@ -1,0 +1,15 @@
+[Unit]
+Description=Nginx web server
+After=network.target
+
+[Service]
+User=root
+Type=forking
+ExecStart=/usr/local/nginx/sbin/nginx
+ExecStop=/usr/local/nginx/sbin/nginx -s stop
+Restart=always
+KillSignal=SIGTERM
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
