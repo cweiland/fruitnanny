@@ -1,6 +1,7 @@
 [Unit]
 Description=Motion
 After=network.target
+Requires=video
 
 [Service]
 User=pi
