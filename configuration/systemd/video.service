@@ -1,6 +1,7 @@
 [Unit]
 Description=FruitNanny video service
 After=network.target
+Requires=nginx
 
 [Service]
 User=pi
