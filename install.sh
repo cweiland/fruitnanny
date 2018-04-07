@@ -77,11 +77,6 @@ env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi 
 
 apt-get -y install python-gst-1.0 python-gobject xvfb pulseaudio dbus-x11
 
-# Install fruitnanny
-cd /opt
-git clone $FN_REPO_URL
-chown -R pi:pi /opt/fruitnanny
-
 # Update /opt/fruitnanny/fruitnanny_config.js
 sed -i "s/Matthew/${baby_name}/g" /opt/fruitnanny/fruitnanny_config.js
 sed -i "s!2016-03-15!${baby_birthdate}!g" /opt/fruitnanny/fruitnanny_config.js
