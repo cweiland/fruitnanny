@@ -180,7 +180,11 @@ mv /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf_old
 ln -s /opt/fruitnanny/configuration/nginx/nginx.conf /usr/local/nginx/conf/nginx.conf
 
 # Configure the password
-sh -c "echo -n 'fruitnanny:' >> /usr/local/nginx/conf/.htpasswd"
+read -p "Create a username for fruitnanny web application [fruitnanny]: " app_uname
+if [ "$app_uname" == "" ]; then
+	app_uname=fruitnanny
+fi
+sh -c "echo -n ${app_uname} >> /usr/local/nginx/conf/.htpasswd"
 echo "Enter password for fruitnanny web application"
 sh -c "openssl passwd -apr1 >> /usr/local/nginx/conf/.htpasswd"
 
