@@ -74,7 +74,6 @@ apt install -y nodejs
 npm install pm2 -g
 sudo -u pi pm2 startup
 env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
-sudo -u pi pm2 save
 
 apt-get -y install python-gst-1.0 python-gobject xvfb pulseaudio dbus-x11
 
@@ -90,6 +89,10 @@ sed -i "s/\"temp_unit\": \"C\"/\"temp_unit\": \"${temp_unit}\"/g" /opt/fruitnann
 cd /opt/fruitnanny
 sudo -u pi npm install
 sudo -u pi pm2 start /opt/fruitnanny/server/app.js --name="fruitnanny"
+
+# Give pm2 time to start app, then save
+sleep 5s
+sudo -u pi pm2 save
 
 # Add the pi user to the pulse-access group
 adduser pi pulse-access
