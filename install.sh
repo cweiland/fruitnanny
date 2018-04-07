@@ -1,6 +1,5 @@
 #!/bin/bash
 
-FN_REPO_URL=https://github.com/alexjrussell/fruitnanny
 NGINX_VERSION=1.10.3
 
 # Check we are root
@@ -27,6 +26,19 @@ fi
 echo "You need to have met the following pre-requisites before running this script:"
 echo "- Enabled the camera"
 echo "- Enlarged the root partition"
+
+# Store user config for later use
+read -p "Enter your baby's name [Baby]: " baby_name
+if [ "$baby_name" == "" ]; then
+    baby_name=Baby
+fi
+read -p "Enter your baby's date of birth (yyyy-mm-dd): " baby_birthdate
+# TODO: Validate birth date
+read -p "Enter temperature unit (C/F) [C]: " temp_unit
+# TODO: Validate temperature unit
+if [ "$temp_unit" == "" ]; then
+    temp_unit=C
+fi
 
 # Disable wifi power-save mode
 echo "Disable wifi power save mode"
@@ -70,18 +82,7 @@ apt-get -y install python-gst-1.0 python-gobject xvfb pulseaudio dbus-x11
 cd /opt
 git clone $FN_REPO_URL
 chown -R pi:pi /opt/fruitnanny
-# Configure fruitnanny
-read -p "Enter your baby's name [Baby]: " baby_name
-if [ "$baby_name" == "" ]; then
-    baby_name=Baby
-fi
-read -p "Enter your baby's date of birth (yyyy-mm-dd): " baby_birthdate
-# TODO: Validate birth date
-read -p "Enter temperature unit (C/F) [C]: " temp_unit
-# TODO: Validate temperature unit
-if [ "$temp_unit" == "" ]; then
-    temp_unit=C
-fi
+
 # Update /opt/fruitnanny/fruitnanny_config.js
 sed -i "s/Matthew/${baby_name}/g" /opt/fruitnanny/fruitnanny_config.js
 sed -i "s!2016-03-15!${baby_birthdate}!g" /opt/fruitnanny/fruitnanny_config.js
