@@ -1,9 +1,47 @@
 <!DOCTYPE html>
 <html>
-
+<!-- TODO: implement -->
 <head>
-  <% include ./partials/head %>
-</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Fruitnanny</title>
+
+  <link rel="shortcut icon" href="/public/project/favicon/favicon.ico">
+  <link rel="icon" sizes="16x16 32x32 64x64" href="/public/project/favicon/favicon.ico">
+
+
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="public/thirdparty/css/bootstrap.min.css">
+  <link rel="stylesheet" href="public/thirdparty/css/bootstrap-slider.min.css">
+
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="public/thirdparty/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="public/thirdparty/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="public/thirdparty/css/AdminLTE.min.css">
+
+  <link rel="stylesheet" href="public/thirdparty/css/skins/skin-blue.min.css">
+
+  <!-- Custom -->
+  <link rel="stylesheet" href="public/project/css/fruitnanny.css">
+
+  <!--script src="//localhost:35729/livereload.js"></script-->
+
+  <!-- jQuery 2.2.3 -->
+  <script type="text/javascript" src="public/thirdparty/js/jquery-2.2.3.min.js"></script>
+  <script type="text/javascript">
+    // TODO: move back to config file when ready
+    var config = JSON.parse(JSON.stringify({
+      "baby_name": "Matthew",
+      "baby_birthday": "2016-03-15",
+      "temp_unit": "C"
+    }));
+  </script>
+  </script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
@@ -11,11 +49,85 @@
 
     <!-- Main Header -->
     <header class="main-header">
-      <% include ./partials/header %>
+      <!-- Logo -->
+      <a href="/" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini">
+          <b>F</b>
+        </span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg">
+          <b>Fruit</b>nanny</span>
+      </a>
+
+      <!-- Header Navbar -->
+      <nav class="navbar navbar-static-top" role="navigation">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+
+          </ul>
+        </div>
+      </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
-      <% include ./partials/sidebar %>
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar">
+
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel">
+          <div class="pull-left image">
+            <img src="public/project/img/baby.png" class="img-circle" alt="User Image">
+          </div>
+          <div class="pull-left info">
+            <p id="name">Name</p>
+            <!-- Status -->
+            <a id="age">Age</a>
+            <script type="text/javascript">
+              $("#name").text(config.baby_name);
+              $(document).ready(function () {
+                $("#age").text(AgeCalc.getAge(new Date(config.baby_birthday)));
+              });
+            </script>
+          </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <ul class="sidebar-menu">
+          <li class="header">Menu</li>
+          <!-- Optionally, you can add icons to the links -->
+          <li class="active">
+            <a href="/">
+              <i class="fa fa-link"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="treeview">
+            <a href="#">
+              <i class="fa fa-gear"></i>
+              <span>Settings</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li>
+                <a href="/settings">App</a>
+              </li>
+              <li>
+                <a href="/settings">Motion</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <!-- /.sidebar-menu -->
+      </section>
+      <!-- /.sidebar -->
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
@@ -33,23 +145,23 @@
         <div class="row">
           <p id="settings-all" class="col-md-6"></p>
           <script type="text/javascript">
-              $("#settings-all").text(JSON.stringify(config, null, 4));
+            $("#settings-all").text(JSON.stringify(config, null, 4));
           </script>
 
         </div>
         <div class="row">
           <p id="settings-random" class="col-md-6"></p>
-          <button onclick="ButtonRandomClick()" >Click me </button>
+          <button onclick="ButtonRandomClick()">Click me </button>
           <script type="text/javascript">
             function ButtonRandomClick() {
               $.get("/api/custom_button/random").
-              done(function(data) {
-                $("#settings-random").text(data.random_number);
-              }).fail(function(err) {
-                  console.log( "error: " + err );
-              })
+                done(function (data) {
+                  $("#settings-random").text(data.random_number);
+                }).fail(function (err) {
+                  console.log("error: " + err);
+                })
             };
-        </script>
+          </script>
         </div>
     </div>
 
@@ -59,14 +171,30 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <!-- Main Footer -->
-  <% include ./partials/footer %>
-  
-
   </div>
   <!-- ./wrapper -->
 
-  <% include ./partials/common-js %>
+  <!-- REQUIRED JS SCRIPTS -->
+
+  <!-- Bootstrap 3.3.6 -->
+  <script type="text/javascript" src="public/thirdparty/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="public/thirdparty/js/bootstrap-slider.min.js"></script>
+
+  <!-- AdminLTE App -->
+  <script type="text/javascript" src="public/thirdparty/js/app.min.js"></script>
+
+  <!-- Helpers -->
+  <script type="text/javascript" src="public/thirdparty/js/bootbox.min.js"></script>
+  <script type="text/javascript" src="public/thirdparty/js/spin.min.js"></script>
+
+  <!-- Just Gage -->
+  <script type="text/javascript" src="public/thirdparty/js/raphael-2.1.4.min.js"></script>
+  <script type="text/javascript" src="public/thirdparty/js/justgage.js"></script>
+
+
+  <!-- Custom -->
+  <script type="text/javascript" src="public/project/js/age-calc.js"></script>
+
 
 
 </body>

@@ -6,15 +6,15 @@ const dht_1 = require("./routes/dht");
 const express = require("express");
 const light_1 = require("./routes/light");
 let app = express();
-app.set("view engine", "ejs");
-app.set("views", "views");
-app.use("/public", express.static("public"));
-app.get("/", (req, res, next) => {
-    res.render("index", { config });
-});
-app.get("/settings", (req, res, next) => {
-    res.render("settings", { config });
-});
+// app.set("view engine", "default");
+// app.set("views", "views");
+app.use(express.static("public"));
+// app.get("/", (req, res, next) => {
+//     res.render("index", { config });
+// });
+// app.get("/settings", (req, res, next) => {
+//     res.render("settings", { config });
+// });
 app.use("/api/light", light_1.default);
 app.use("/api/dht", dht_1.default);
 app.use("/api/custom_button", custom_button_1.default);
