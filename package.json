@@ -10,7 +10,7 @@
     "eject": "react-scripts eject",
     "start-api": "node server/app.js"
   },
-  "proxy": "http://localhost:7000",
+  "proxy": "http://localhost/",
   "author": "Dmitry Ivanov",
   "license": "MIT",
   "dependencies": {
