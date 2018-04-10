@@ -50,3 +50,5 @@ jspm_packages
 
 # Development env vars
 .env*
+
+.vscode
