@@ -1,7 +1,17 @@
 import React from "react";
+import { Player } from "video-react";
+import "../styles/video-react.css";
+
+// const VideoPlayer = props => (
+//   <Player
+//     playsInline
+//     // poster="/assets/poster.png"
+//     srcObject={props.stream}
+//   />
+// );
 
 const VideoPlayer = props => (
-  <div id="videoContainer" data-fullscreen="false">
+  <figure id="videoContainer" className="vidContainer" data-fullscreen="false">
     {/* eslint-disable-line */}
     <video id="video" srcobject={props.stream} autoPlay muted />
     <div id="fullscreen-info" className="fs-info">
@@ -28,7 +38,7 @@ const VideoPlayer = props => (
         <i className="fa fa-arrows-alt" aria-hidden="true" />
       </button>
     </div>
-  </div>
+  </figure>
 );
 
 export default VideoPlayer;

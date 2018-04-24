@@ -1,0 +1,144 @@
+:root {
+  --bgColor: #f0aeab;
+  --primary: #fefac0;
+  --secondary: #a8c6fa;
+  --success: #cbe8ba;
+  --neutral: #e6e6e6;
+}
+
+body {
+  background-color: var(--bgColor);
+  margin: 0;
+  padding: 25px;
+  font-family: 'Architects Daughter', cursive;
+}
+.app {
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  /* grid-template-columns: repeat(2, 1fr); */
+  /* grid-gap: 1px; */
+}
+.monitor-feed {
+  width: 640px;
+  height: 480px;
+  background-color: var(--neutral);
+  margin-top: 80px;
+}
+.feed-header {
+  font-family: 'Lobster', cursive;
+  font-size: 60px;
+  position: relative;
+  top: -64px;
+  z-index: 1;
+  text-shadow: 2px 3px 10px rgba(152,112,112,0.2);
+}
+.cherub-image {
+  width: 224px;
+  height: 224px;
+  position: relative;
+  top: -223px;
+  right: -510px;
+  transform: rotate(-49deg)
+}
+.feed {
+  position: relative;
+  top: -306px;
+}
+
+.sleep-timer-container {
+  width: 100%;
+  font-size: 60px;
+  padding: 10px 0 8px 0;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.zzz-image {
+  height: 65px;
+  position: relative;
+  top: 10px;
+}
+.timer-buttons {
+  position: relative;
+  top: -10px;
+}
+button {
+  width: 120px;
+  height: 55px;
+  font-size: 30px;
+  font-family: 'Architects Daughter', cursive;
+  border-radius: 12px;
+  border: none;
+  margin: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  outline-width: 0;
+  box-shadow: 2px 3px 10px #987070;
+}
+button:hover {
+  cursor: pointer;
+}
+button:active {
+  box-shadow: 1px 1px 7px #987070;
+}
+.btn-primary {
+  background-color: var(--primary);
+}
+.btn-secondary {
+  background-color: var(--secondary);
+}
+.btn-success {
+  background-color: var(--success);
+}
+
+.spotify-container {
+  margin-bottom: 20px;
+}
+.spotify-overlay {
+  height: 78px;
+  width: 78px;
+  position: absolute;
+  top: 0px;
+}
+
+/* DATA SIDE */
+.data-pane {
+  width: 640px;
+}
+.clock-container {
+  text-align: center;
+  font-size: 60px;
+}
+.card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.data-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 195px;
+  height: 195px;
+  background-color: var(--neutral);
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 2px 3px 10px #987070;
+}
+.card-header {
+  font-size: 24px;
+}
+.current {
+  font-family: 'Advent Pro', sans-serif;
+  font-size: 60px;
+}
+.avg {
+  font-family: 'Coda', cursive;
+  font-size: 24px;
+}
+
+.data-chart {
+  padding-top: 20px;
+}
