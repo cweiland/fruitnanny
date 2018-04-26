@@ -28,21 +28,34 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // Update temperature once a minute
     this.fetchTemp();
-    this.tempInterval = setInterval(this.fetchTemp, 2 * 60 * 1000);
+    this.tempInterval = setInterval(() => {
+      this.fetchTemp();
+    }, 1 * 60 * 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.tempInterval);
   }
 
   fetchTemp() {
     fetch("/api/dht/current")
       .then(resp => resp.json())
       .then(data => {
+        console.log(data);
+        // DHT22 sensor may return {temperature: "Failed", humidity: "to"} if unsuccessful
+        if (data.temperature === "Failed") {
+          console.debug("DBG: nan found")
+          return this.fetchTemp();
+        }
+
         const tempInC = data.temperature;
         const tempInF = Math.round(tempInC * (9 / 5) + 32);
         const h = Math.round(data.humidity);
         const { temp, humidity } = this.state;
         temp.cur = `${tempInF}°`;
         humidity.cur = `${h}%`;
-        console.log(temp, humidity);
         this.setState({ temp, humidity });
       })
       .catch(err => {
