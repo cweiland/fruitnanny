@@ -33,16 +33,10 @@ export default class StreamContainer extends Component {
         server: "/janus",
         success: this.onSessionSuccess.bind(this),
         error: error => {
-          // TODO: stop spinner in video player by passing an active session prop
-          // if (spinner !== null && spinner !== undefined)
-          //   spinner.stop();
           Janus.error(error);
           window.alert(error);
         },
-        destroyed: () => {
-          // if (spinner !== null && spinner !== undefined)
-          //   spinner.stop();
-        }
+        destroyed: () => { }
       });
     }
   }
@@ -54,9 +48,6 @@ export default class StreamContainer extends Component {
       onmessage: this.onMessage.bind(this),
       onremotestream: this.handleRemoteStream.bind(this),
       error: error => {
-        // TODO
-        // if (spinner !== null && spinner !== undefined)
-        //   spinner.stop();
         Janus.error("  -- Error attaching plugin... ", error);
         window.alert(`Error attaching plugin... ${error}`);
       },
@@ -151,8 +142,6 @@ export default class StreamContainer extends Component {
           });
         },
         error: error => {
-          // if (spinner !== null && spinner !== undefined)
-          //   spinner.stop();
           Janus.error("WebRTC error:", error);
           window.alert(`WebRTC error... ${JSON.stringify(error)}`);
         }
@@ -165,15 +154,6 @@ export default class StreamContainer extends Component {
     Janus.debug(JSON.stringify(stream));
 
     this.setState({ stream, isStreaming: true });
-    // TODO: set state and update VideoPlayer
-    // $("#video").bind("playing", function () {
-    //   if (spinner !== null && spinner !== undefined)
-    //     spinner.stop();
-    //   spinner = null;
-    // });
-
-    // TODO: all this does is set element src. Let react handle it
-    // Janus.attachMediaStream($('#video').get(0), stream);
 
     // TODO: pass as props to spectrum
     // streamContext.init(stream);

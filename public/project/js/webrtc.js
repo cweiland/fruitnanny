@@ -7,8 +7,8 @@ var streaming = null;
 var started = false;
 var selectedStream = null;
 
-var target = document.getElementById('spinner');
-spinner = new Spinner().spin(target);
+// var target = document.getElementById('spinner');
+// spinner = new Spinner().spin(target);
 var streamContext = StreamContext;
 var audioSpectrumWidget = AudioSpectrumWidget;
 
@@ -88,11 +88,11 @@ $(document).ready(function() {
 								Janus.debug(" ::: Got a remote stream :::");
 								Janus.debug(JSON.stringify(stream));
 								
-								$("#video").bind("playing", function () {
-									if(spinner !== null && spinner !== undefined)
-										spinner.stop();
-									spinner = null;
-								});
+								// $("#video").bind("playing", function () {
+								// 	if(spinner !== null && spinner !== undefined)
+								// 		spinner.stop();
+								// 	spinner = null;
+								// });
 								
 								Janus.attachMediaStream($('#video').get(0), stream);
 								streamContext.init(stream);

@@ -2,14 +2,6 @@ import React from "react";
 import { Player } from "video-react";
 import "../styles/video-react.css";
 
-// const VideoPlayer = props => (
-//   <Player
-//     playsInline
-//     // poster="/assets/poster.png"
-//     srcObject={props.stream}
-//   />
-// );
-
 const VideoPlayer = props => (
   <figure id="videoContainer" className="vidContainer" data-fullscreen="false">
     {/* eslint-disable-line */}
@@ -20,7 +12,7 @@ const VideoPlayer = props => (
       <div id="fs-audiolevel" />
     </div>
 
-    <div id="video-controls" className="controls" data-state="hidden">
+    <div id="video-controls" className="controls" style={props.isStreaming ? null : {display: 'none'}} data-state="hidden">
       <button id="playpause" type="button" data-state="play">
         <i className="fa fa-play" aria-hidden="true" />
       </button>
