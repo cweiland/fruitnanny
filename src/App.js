@@ -46,7 +46,6 @@ class App extends Component {
         console.log(data);
         // DHT22 sensor may return {temperature: "Failed", humidity: "to"} if unsuccessful
         if (data.temperature === "Failed") {
-          console.debug("DBG: nan found")
           return this.fetchTemp();
         }
 

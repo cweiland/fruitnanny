@@ -7,8 +7,6 @@ var streaming = null;
 var started = false;
 var selectedStream = null;
 
-var target = document.getElementById('spinner');
-spinner = new Spinner().spin(target);
 var streamContext = StreamContext;
 var audioSpectrumWidget = AudioSpectrumWidget;
 
@@ -17,7 +15,7 @@ $(document).ready(function() {
 	Janus.init({debug: "all", callback: function() {
 			// Make sure the browser supports WebRTC
 		if(!Janus.isWebrtcSupported()) {
-			bootbox.alert("No WebRTC support... ");
+			window.alert("No WebRTC support... ");
 			return;
 		}
 		
@@ -37,10 +35,8 @@ $(document).ready(function() {
 								loadStream();
 							},
 							error: function(error) {
-								if(spinner !== null && spinner !== undefined)
-									spinner.stop();
 								Janus.error("  -- Error attaching plugin... ", error);
-								bootbox.alert("Error attaching plugin... " + error);
+								window.alert("Error attaching plugin... " + error);
 							},
 							onmessage: function(msg, jsep) {
 								Janus.debug(" ::: Got a message :::");
@@ -57,7 +53,7 @@ $(document).ready(function() {
 											stopStream();
 									}
 								} else if(msg["error"] !== undefined && msg["error"] !== null) {
-									bootbox.alert(msg["error"]);
+									window.alert(msg["error"]);
 									stopStream();
 									return;
 								}
@@ -76,10 +72,8 @@ $(document).ready(function() {
 												streaming.send({"message": body, "jsep": jsep});
 											},
 											error: function(error) {
-												if(spinner !== null && spinner !== undefined)
-													spinner.stop();
 												Janus.error("WebRTC error:", error);
-												bootbox.alert("WebRTC error... " + JSON.stringify(error));
+												window.alert("WebRTC error... " + JSON.stringify(error));
 											}
 										});
 								}
@@ -87,12 +81,6 @@ $(document).ready(function() {
 							onremotestream: function(stream) {
 								Janus.debug(" ::: Got a remote stream :::");
 								Janus.debug(JSON.stringify(stream));
-								
-								$("#video").bind("playing", function () {
-									if(spinner !== null && spinner !== undefined)
-										spinner.stop();
-									spinner = null;
-								});
 								
 								Janus.attachMediaStream($('#video').get(0), stream);
 								streamContext.init(stream);
@@ -105,16 +93,12 @@ $(document).ready(function() {
 						});
 				},
 				error: function(error) {
-					if(spinner !== null && spinner !== undefined)
-					  spinner.stop();
 					Janus.error(error);
-					bootbox.alert(error, function() {
+					window.alert(error, function() {
 						//window.location.reload();
 					});
 				},
 				destroyed: function() {
-					if(spinner !== null && spinner !== undefined)
-					  spinner.stop();
 					//window.location.reload();
 				}
 			});
@@ -126,7 +110,7 @@ function loadStream() {
 	Janus.debug("Sending message (" + JSON.stringify(body) + ")");
 	streaming.send({"message": body, success: function(result) {
 		if(result === null || result === undefined) {
-			bootbox.alert("Got no response to our query for available streams");
+			window.alert("Got no response to our query for available streams");
 			return;
 		}
 		if(result["list"] !== undefined && result["list"] !== null) {
@@ -142,7 +126,7 @@ function loadStream() {
 function startStream() {
 	Janus.log("Selected video id #" + selectedStream);
 	if(selectedStream === undefined || selectedStream === null) {
-		bootbox.alert("Select a stream from the list");
+		window.alert("Select a stream from the list");
 		return;
 	}
 	var body = { "request": "watch", id: parseInt(selectedStream) };
