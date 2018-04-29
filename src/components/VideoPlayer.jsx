@@ -1,6 +1,4 @@
 import React from "react";
-import { Player } from "video-react";
-import "../styles/video-react.css";
 
 const VideoPlayer = props => (
   <figure id="videoContainer" className="vidContainer" data-fullscreen="false">

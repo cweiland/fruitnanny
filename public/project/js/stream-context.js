@@ -27,13 +27,18 @@ var StreamContext = (function() {
         }
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 4096
+        
+        // Filter out low frequencies (<400hz)
+        const biquadFilter = audioContext.createBiquadFilter();
+        biquadFilter.type = "highpass";
+        biquadFilter.frequency.value = 400;
 
         gain = audioContext.createGain();
         gain.gain.value = 1;
-        
-        source.connect(analyser);
-        analyser.connect(gain)
-        
+
+        source.connect(biquadFilter);
+        biquadFilter.connect(analyser);
+        analyser.connect(gain);
         gain.connect(audioContext.destination);
         initialized = true;
     }

@@ -32,15 +32,15 @@ body {
   position: relative;
   top: -64px;
   z-index: 1;
-  text-shadow: 2px 3px 10px rgba(152,112,112,0.2);
+  text-shadow: 2px 3px 10px rgba(152,112,112,0.6);
 }
 .cherub-image {
   width: 224px;
   height: 224px;
   position: relative;
-  top: -223px;
+  top: -221px;
   right: -510px;
-  transform: rotate(-49deg)
+  transform: rotate(-48deg)
 }
 .feed {
   position: relative;
@@ -69,13 +69,13 @@ button {
   height: 55px;
   font-size: 30px;
   font-family: 'Architects Daughter', cursive;
-  border-radius: 12px;
+  border-radius: 10px;
   border: none;
   margin: 5px 5px;
   text-align: center;
   text-decoration: none;
   outline-width: 0;
-  box-shadow: 2px 3px 10px #987070;
+  box-shadow: 2px 3px 5px #987070;
 }
 button:hover {
   cursor: pointer;
@@ -93,14 +93,9 @@ button:active {
   background-color: var(--success);
 }
 
-.spotify-container {
-  margin-bottom: 20px;
-}
-.spotify-overlay {
-  height: 78px;
-  width: 78px;
-  position: absolute;
-  top: 0px;
+.audio-spectrum {
+  position: relative;
+  top: -200px;
 }
 
 /* DATA SIDE */

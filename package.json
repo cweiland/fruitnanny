@@ -14,17 +14,16 @@
   "author": "Dmitry Ivanov, Alexander Russell, Davy Marrero",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.15.2",
     "chart.js": "^1.1.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "express": "^4.14.0",
+    "pg": "^7.4.1",
     "react": "^16.3.1",
+    "react-audio-spectrum": "^0.0.9",
     "react-chartjs": "^1.2.0",
     "react-dom": "^16.3.1",
     "react-test-renderer": "^16.3.1",
-    "redux": "^3.7.2",
-    "video-react": "^0.10.4",
     "webrtc-adapter": "^6.1.4"
   },
   "devDependencies": {

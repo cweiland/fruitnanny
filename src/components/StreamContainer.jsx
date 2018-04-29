@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-// import PropTypes from 'prop-types'
 import Janus from "../lib/janus";
 import VideoPlayer from "./VideoPlayer";
+import AudioWidget from "./AudioWidget";
 
 export default class StreamContainer extends Component {
   constructor(props) {
@@ -150,10 +150,10 @@ export default class StreamContainer extends Component {
   }
 
   handleRemoteStream(stream) {
+    this.setState({ stream, isStreaming: true });
+
     Janus.debug(" ::: Got a remote stream :::");
     Janus.debug(JSON.stringify(stream));
-
-    this.setState({ stream, isStreaming: true });
 
     // TODO: pass as props to spectrum
     // streamContext.init(stream);
@@ -162,10 +162,13 @@ export default class StreamContainer extends Component {
 
   render() {
     return (
+      <div>
       <VideoPlayer
         stream={this.state.stream}
         isStreaming={this.state.isStreaming}
       />
+      {this.state.stream ? <AudioWidget stream={this.state.stream} /> : null}
+      </div>
     );
   }
 }
