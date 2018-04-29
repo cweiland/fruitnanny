@@ -1,8 +1,11 @@
 /* eslint-disable react/jsx-filename-extension */
+// TODO: index.js for components
 import React, { Component } from "react";
-import DataSection from "./components/DataSection";
 import SleepTimer from "./components//SleepTimer";
 import StreamContainer from "./components/StreamContainer";
+import Clock from "./components/Clock";
+import DataCards from "./components/DataCards";
+import DataChart from "./components/DataChart";
 import * as cherub from "./assets/cherub.png";
 
 class App extends Component {
@@ -68,7 +71,6 @@ class App extends Component {
     fetch("/api/dht/current")
       .then(resp => resp.json())
       .then(data => {
-        console.log(data);
         // DHT22 sensor may return {temperature: "Failed", humidity: "to"} if unsuccessful
         if (data.temperature === "Failed") {
           return this.fetchTemp();
@@ -226,7 +228,7 @@ class App extends Component {
   }
 
   render() {
-    const { temp, humidity, naptime, timer } = this.state;
+    const { temp, humidity, naptime, timer, naps } = this.state;
 
     return (
       <div className="app">
@@ -242,7 +244,11 @@ class App extends Component {
             resetTimer={this.resetTimer} 
             saveTime={this.saveTime} />
         </div>
-        <DataSection temp={temp} humidity={humidity} naptime={naptime} />
+        <div className="data-pane">
+          <Clock />
+          <DataCards temp={temp} humidity={humidity} naptime={naptime} />
+          <DataChart naps={naps}/>
+        </div>
       </div>
     );
   }
