@@ -56,5 +56,5 @@ jspm_packages
 .vscode/
 
 # Build (ignore until v1.0.0)
-build/
+build/*
 
