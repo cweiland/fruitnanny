@@ -154,10 +154,6 @@ export default class StreamContainer extends Component {
 
     Janus.debug(" ::: Got a remote stream :::");
     Janus.debug(JSON.stringify(stream));
-
-    // TODO: pass as props to spectrum
-    // streamContext.init(stream);
-    // audioSpectrumWidget.enable();
   }
 
   render() {

@@ -1,16 +1,22 @@
 /* eslint-disable react/jsx-filename-extension */
-// TODO: index.js for components
+// TODO: index.js
 import React, { Component } from "react";
+import * as cherub from "./assets/cherub.png";
 import SleepTimer from "./components//SleepTimer";
-import StreamContainer from "./components/StreamContainer";
 import Clock from "./components/Clock";
 import DataCards from "./components/DataCards";
 import DataChart from "./components/DataChart";
-import * as cherub from "./assets/cherub.png";
+import StreamContainer from "./components/StreamContainer";
+import { fetchNaps } from "./lib/fetchNaps";
+import { fetchTemp } from "./lib/fetchTemp";
+import { getElapsedTime } from "./lib/getElapsedTime";
+import { saveNapData } from "./lib/saveNapData";
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    // TODO: change state var names to be more descriptive
     this.state = {
       // Data cards
       temp: {
@@ -50,91 +56,51 @@ class App extends Component {
     this.toggleTimer = this.toggleTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
     this.saveTime = this.saveTime.bind(this);
+    this.setTempState = this.setTempState.bind(this);
+    this.setNapState = this.setNapState.bind(this);
   }
 
   componentDidMount() {
-    // Update temperature once a minute
-    this.fetchTemp();
-    this.tempInterval = setInterval(() => {
-      this.fetchTemp();
-    }, 1 * 60 * 1000);
+    const manageTemp = () => (
+      fetchTemp()
+        .then(this.setTempState)
+        .catch(e => console.error(`Error retrieving temperature data: ${e}`))
+    );
 
-    this.fetchNapData();
+    // Update temperature on page load, then once a minute
+    manageTemp();
+    this.tempInterval = setInterval(manageTemp, 60 * 1000);
+
+    // Manage naps data from database
+    fetchNaps()
+      .then(this.setNapState)
+      .catch(e => console.error(`Error retrieving naps data: ${e}`))
   }
 
   componentWillUnmount() {
     clearInterval(this.tempInterval);
   }
 
-  // TODO: refactor class's business logic into separate file
-  fetchTemp() {
-    fetch("/api/dht/current")
-      .then(resp => resp.json())
-      .then(data => {
-        // DHT22 sensor may return {temperature: "Failed", humidity: "to"} if unsuccessful
-        if (data.temperature === "Failed") {
-          return this.fetchTemp();
-        }
-
-        // TODO: when settings page done, set temp accordingly
-        const tempInC = data.temperature;
-        const tempInF = Math.round(tempInC * (9 / 5) + 32);
-        const h = Math.round(data.humidity);
-        const { temp, humidity, temps, humids } = this.state;
-        temps.push(tempInF);
-        humids.push(h);
-        this.setState({ 
-          temps,
-          humids,
-          temp: {...temp, cur: `${tempInF}°`}, 
-          humidity: {...humidity, cur: `${h}%`}
-        });
-      })
-      .catch(err => {
-        window.console.log(err);
-      });
+  setTempState({ currentTemp, currentHumidity }) {
+    const { temp, humidity, temps, humids } = this.state;
+    const newTemps = [...temps, currentTemp];
+    const newHumidities = [...humids, currentHumidity];
+    this.setState({
+      temps: newTemps,
+      humids: newHumidities,
+      temp: { ...temp, cur: `${currentTemp}°` },
+      humidity: { ...humidity, cur: `${currentHumidity}%` }
+    });
   }
 
-  fetchNapData() {
-    fetch("/api/naps")
-    .then(resp => resp.json())
-    .then(naps => {
-      if (naps.length > 0) {
-        const timesAll = [];
-        const timesToday = [];
-        const temps = [];
-        const humids = [];
-        naps.forEach(nap => {
-          const { temp, humidity, length, date } = nap.data;
-          temps.push(temp);
-          humids.push(humidity);
-          timesAll.push(length);
-          const today = new Date();
-          const todayStart = Number(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-          const todayEnd = todayStart + (24 * 60 * 60 * 1000);
-          if (date >= todayStart && date < todayEnd) {
-            timesToday.push(length);
-          }
-        });
-
-        // TODO: present nap time in hours and minutes, or just mins as appropriate
-        // TODO: repeated in saveTime, refactor
-        const reducer = (acc, cur) => acc + cur;
-        const avgTemp = Math.round(temps.reduce(reducer) / naps.length);
-        const avgHumidity = Math.round(humids.reduce(reducer) / naps.length);
-        const avgTime = Math.round(timesAll.reduce(reducer) / timesAll.length / 60);
-        const totalToday = timesToday.length > 0 
-          ? `${Math.round(timesToday.reduce(reducer) / 60)}m` 
-          : "--";
-        
-        const { temp, humidity, naptime } = this.state;
-        this.setState({ 
-          naps,
-          naptime: { ...naptime, cur: totalToday, avg: `${avgTime}m` },
-          temp: { ...temp, avg: `${avgTemp}°` },
-          humidity: { ...humidity, avg: `${avgHumidity}%` }
-        });
-      }
+  setNapState(napsData) {
+    const { naps, totalNaptimeToday, avgNaptime, avgTemp, avgHumidity } = napsData;
+    const { temp, humidity, naptime } = this.state;
+    this.setState({
+      naps,
+      naptime: { ...naptime, cur: totalNaptimeToday, avg: `${avgNaptime}m` },
+      temp: { ...temp, avg: `${avgTemp}°` },
+      humidity: { ...humidity, avg: `${avgHumidity}%` }
     });
   }
 
@@ -150,7 +116,7 @@ class App extends Component {
 
     if (isTiming) {
       this.timerInterval = setInterval(() => {
-        timer.elapsed = this.calcTime(start);
+        timer.elapsed = getElapsedTime(start);
         this.setState({ timer });
       }, 1000);
     } else {
@@ -158,73 +124,49 @@ class App extends Component {
     }
   }
 
-  saveTime() {
+  async saveTime() {
     // TODO: ensure all data points collected before saving (maybe setTimeout to give time to t/h)
     // TODO: reset elapsed after save
-    // FIXME: if another quick start and save is execed after a save, temps and humids is empty
-    const { temps, humids, timer } = this.state
+    // FIXME: if another quick start and save is execed after a save, temps and humids is empty, crashes
+    const { temps, humids, timer, naps } = this.state
     const { start } = timer;
+
     const reducer = (acc, cur) => acc + cur;
     const avgTemp = Math.round(temps.reduce(reducer) / temps.length);
     const avgHumidity = Math.round(humids.reduce(reducer) / humids.length);
-    const elapsed = Math.round(start / 1000);
-    fetch("/api/naps", {
-      body: JSON.stringify({ 
-        date: Number(new Date()), 
-        length: elapsed, 
-        temp: avgTemp, 
-        humidity: avgHumidity 
-      }),
-      headers: { 'content-type': 'application/json' },
-      method: 'POST'
-    })
-    .then(response => response.json())
-    .then(newNap => {
-      let { naps, timer } = this.state;
-      naps = [...naps, newNap];
-      const resetTimer = { 
+    const napLength = Math.round(start / 1000);
+
+    try {
+      const newNap = await saveNapData(avgTemp, avgHumidity, napLength);
+      const updatedNaps = [...naps, newNap];
+
+      const resetTimer = {
         ...timer,
         start: 0,
         isTiming: false,
         elapsed: "00:00:00",
       };
-      this.setState({ naps, timer: resetTimer, temps: [], humids: [] });
-    });
+
+      this.setState({
+        naps: updatedNaps,
+        timer: resetTimer,
+        temps: [],
+        humids: []
+      });
+    } catch (e) {
+      console.error(`Unable to save new nap: ${e}`);
+    }
   }
 
   resetTimer() {
     clearInterval(this.timerInterval);
-    this.setState({ 
+    this.setState({
       timer: {
-        start: 0, 
-        isTiming: null, 
-        elapsed: "00:00:00" 
+        start: 0,
+        isTiming: null,
+        elapsed: "00:00:00"
       }
     });
-  }
-
-  /* eslint-disable class-methods-use-this */
-  calcTime(start) {
-    const now = Number(new Date());
-    let elapsedSecs = Math.round((now - start) / 1000);
-
-    const hrs = Math.floor(elapsedSecs / (60 * 60));
-    elapsedSecs -= hrs * (60 * 60);
-
-    const mins = Math.floor(elapsedSecs / 60);
-    elapsedSecs -= mins * 60;
-
-    const secs = elapsedSecs;
-
-    const [hStr, mStr, sStr] = [hrs, mins, secs].map(t => {
-      let strT = String(t);
-      if (strT.length < 2) {
-        strT = `0${t}`;
-      }
-      return strT;
-    });
-
-    return `${hStr}:${mStr}:${sStr}`;
   }
 
   render() {
@@ -238,16 +180,16 @@ class App extends Component {
             <img alt="cherub" className="cherub-image" src={cherub} />
             <StreamContainer />
           </div>
-          <SleepTimer 
+          <SleepTimer
             {...timer}
-            toggleTimer={this.toggleTimer} 
-            resetTimer={this.resetTimer} 
+            toggleTimer={this.toggleTimer}
+            resetTimer={this.resetTimer}
             saveTime={this.saveTime} />
         </div>
         <div className="data-pane">
           <Clock />
           <DataCards temp={temp} humidity={humidity} naptime={naptime} />
-          <DataChart naps={naps}/>
+          <DataChart naps={naps} />
         </div>
       </div>
     );

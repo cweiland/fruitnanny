@@ -1,10 +1,7 @@
-import React, { Component } from 'react';
-
-const LineChart = require('react-chartjs').Line;
+import React from 'react';
+import { Line as LineChart } from "react-chartjs";
 
 const setData = (naps, dateObjs) => {
-  // TODO: iterable should be start date to end date in day span,
-  // filtering naps on that day and reducing to sum or avg
   const temps = [];
   const humids = [];
   const lengths = [];
@@ -17,7 +14,7 @@ const setData = (naps, dateObjs) => {
       return nap.data.date >= lo && nap.data.date < hi;
     });
   };
-  
+
   if (naps.length > 0) {
     dateObjs.forEach(date => {
       const napsOnDate = dateFilter(naps, date);
@@ -32,13 +29,21 @@ const setData = (naps, dateObjs) => {
       });
 
       lengths.push(
-        Math.round(dayLengths.reduce((acc, cur) => acc + cur))
+        dayLengths.length > 0 ?
+          Math.round(dayLengths.reduce((acc, cur) => acc + cur)) :
+          null
       );
+
       humids.push(
-        Math.round(dayHumids.reduce((acc, cur) => acc + cur) / napsOnDate.length)
+        dayHumids.length > 0 ?
+          Math.round(dayHumids.reduce((acc, cur) => acc + cur) / napsOnDate.length) :
+          null
       );
+
       temps.push(
-        Math.round(dayTemps.reduce((acc, cur) => acc + cur) / napsOnDate.length)
+        dayTemps.length > 0 ?
+          Math.round(dayTemps.reduce((acc, cur) => acc + cur) / napsOnDate.length) :
+          null
       );
     });
   }
@@ -125,31 +130,19 @@ const options = {
   // String - A legend template
   // legendTemplate: '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].strokeColor%>">' +
   // '<%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>',
-
-  scales: {
-    yAxes: [{
-        ticks: {
-            fontSize: 20
-        }
-    }]
-  },
 };
 
 const setDayLabels = naps => {
   const dates = naps.map(nap => nap.data.date);
-  const earliestDate = naps[0];
-  const latestDate = naps[naps.length - 1];
-
+  const earliestDate = dates[0];
+  const latestDate = Number(new Date());
   const DAY_IN_MS = 24 * 60 * 60 * 1000;
-  const DAYS_SPAN = Math.ceil((latestDate - earliestDate) / DAY_IN_MS) || 0;
-
-  const now = +new Date();
-  const start = +new Date(now - (DAYS_SPAN * DAY_IN_MS));
-
+  const DAYS_SPAN = Math.ceil((latestDate - earliestDate) / DAY_IN_MS);
   const dayLabels = [];
   const dateObjs = []; // A date object for each day in day span
+
   for (let i = 0; i <= DAYS_SPAN; i += 1) {
-    const thisDate = new Date(start + (i * DAY_IN_MS));
+    const thisDate = new Date(earliestDate + (i * DAY_IN_MS));
     const dateStr = `${thisDate.getMonth() + 1}/${thisDate.getDate()}`;
     dateObjs.push(thisDate);
     dayLabels.push(dateStr);
@@ -158,22 +151,18 @@ const setDayLabels = naps => {
   return [dayLabels, dateObjs];
 };
 
-export default class DataChart extends Component {
-  constructor(props) {
-    super(props);
-  }
-  
-  render() {
-    const [dayLabels, dateObjs] = setDayLabels(this.props.naps);
-    const data = {
-      labels: dayLabels,
-      datasets: setData(this.props.naps, dateObjs),
-    };
+const DataChart = props => {
+  const [dayLabels, dateObjs] = setDayLabels(props.naps);
+  const data = {
+    labels: dayLabels,
+    datasets: setData(props.naps, dateObjs),
+  };
 
-    return (
-      <div className="data-chart">
-        <LineChart data={data} options={options} width="640" height="474" />
-      </div>
-    );
-  }
+  return (
+    <div className="data-chart">
+      <LineChart data={data} options={options} width="640" height="474" />
+    </div>
+  );
 }
+
+export default DataChart;
