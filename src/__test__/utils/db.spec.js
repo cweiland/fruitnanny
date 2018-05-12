@@ -1,7 +1,8 @@
 import {
-  parseNapsData,
   calculateNapAverages,
-  processNaps
+  parseNapsData,
+  processNaps,
+  fetchNaps
 } from "../../lib/utils/db";
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -16,6 +17,39 @@ beforeAll(() => {
     { date: TODAY, length: 1771, temp: 76, humidity: 52 },
     { date: TODAY, length: 3026, temp: 81, humidity: 52 }
   ];
+});
+
+describe("fetchNaps()", () => {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
+  it("should attempt to fetch data from API", () => {
+    fetch.mockResponseOnce(JSON.stringify(naps));
+    fetchNaps().then(() => expect(fetch).toHaveBeenCalledTimes(1));
+  });
+
+  describe("on success", () => {
+    it("should return an object containing processed naps data", async () => {
+      fetch.mockResponseOnce(JSON.stringify(naps));
+      const expected = processNaps(naps);
+      const result = await fetchNaps();
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe("on error", () => {
+    it("should fail gracefully", async () => {
+      fetch.mockReject(new Error("Network request failed"));
+      let result;
+      try {
+        result = await fetchNaps();
+      } catch (e) {
+        expect(e).toBe("Network request failed");
+        expect(result).toBeUndefined();
+      }
+    });
+  });
 });
 
 describe("parseNapsData()", () => {

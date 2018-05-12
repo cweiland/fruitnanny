@@ -6,10 +6,10 @@ import Clock from "./components/Clock";
 import DataCards from "./components/DataCards";
 import DataChart from "./components/DataChart";
 import StreamContainer from "./components/StreamContainer";
-import { processNaps } from "./lib/utils/db";
-import fetchTemp from "./lib/fetchTemp";
 import calcElapsedTime from "./lib/calcElapsedTime";
 import saveNapData from "./lib/saveNapData";
+import fetchNaps from "./lib/utils/db";
+import fetchTemps from "./lib/utils/temp";
 
 class App extends Component {
   constructor(props) {
@@ -48,26 +48,31 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const manageTemp = () =>
-      fetchTemp()
-        .then(this.setTempState)
-        .catch(e => console.error(`Error retrieving temperature data. ${e}`));
-
-    // Update temperature on page load, then once a minute
-    manageTemp();
-    this.tempInterval = setInterval(manageTemp, 60 * 1000);
-
-    // Manage naps data from database
-    // TODO: benefit from dropping off naps in state before processing to prevent having to drill them through?
-    fetch("/api/naps")
-      .then(resp => resp.json())
-      .then(processNaps)
-      .then(this.setNapState)
-      .catch(e => console.error(`Error retrieving naps data. ${e}`));
+    this.updateNaps();
+    this.updateTemp();
+    this.tempInterval = setInterval(this.updateTemp, 60 * 1000);
   }
 
   componentWillUnmount() {
     clearInterval(this.tempInterval);
+  }
+
+  updateNaps() {
+    fetchNaps()
+      .then(this.setNapState)
+      .catch(() => {}); // Handled in fetchNaps
+  }
+
+  updateTemp() {
+    fetchTemps()
+      .then(this.setTempState)
+      .catch(e => {
+        console.error(`Error retrieving temperature data. ${e}`);
+        if (e === "DHT22 sensor failed.") {
+          // Happens occasionally. Try again.
+          this.updateTemp();
+        }
+      });
   }
 
   setTempState({ currentTemp, currentHumidity }) {
@@ -124,6 +129,7 @@ class App extends Component {
   }
 
   async saveTime() {
+    // TODO: refactor
     // TODO: ensure all data points collected before saving (maybe setTimeout to give time to t/h)
     // TODO: reset elapsed after save
     // FIXME: if another quick start and save is execed after a save, temps and humids is empty, crashes
@@ -170,7 +176,6 @@ class App extends Component {
 
   render() {
     const { temp, humidity, naptime, timer, naps } = this.state;
-
     return (
       <div className="app">
         <div>

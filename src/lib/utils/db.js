@@ -59,8 +59,14 @@ const calculateNapAverages = (naps, parsedNapData) => {
   };
 };
 
-// TODO: error handling on caller
 const processNaps = naps =>
   naps.length > 0 ? calculateNapAverages(naps, parseNapsData(naps)) : null;
 
-export { parseNapsData, calculateNapAverages, processNaps };
+const fetchNaps = () =>
+  fetch("/api/napss")
+    .then(resp => resp.json())
+    .then(processNaps)
+    .catch(e => console.error(`Error retrieving naps data. ${e}`));
+
+export { parseNapsData, calculateNapAverages, processNaps, fetchNaps };
+export default fetchNaps;
