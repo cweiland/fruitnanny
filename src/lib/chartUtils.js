@@ -10,7 +10,7 @@ const setData = (naps, dateObjs) => {
         new Date(napDate.getFullYear(), napDate.getMonth(), napDate.getDate())
       );
       const hi = Number(new Date(lo + 24 * 60 * 60 * 1000 - 1));
-      return nap.data.date >= lo && nap.data.date < hi;
+      return nap.date >= lo && nap.date < hi;
     });
 
   if (naps.length > 0) {
@@ -21,9 +21,9 @@ const setData = (naps, dateObjs) => {
       const dayLengths = [];
 
       napsOnDate.forEach(nap => {
-        dayTemps.push(nap.data.temp);
-        dayHumids.push(nap.data.humidity);
-        dayLengths.push(nap.data.length / 60);
+        dayTemps.push(nap.temp);
+        dayHumids.push(nap.humidity);
+        dayLengths.push(nap.length / 60);
       });
 
       lengths.push(
@@ -87,7 +87,7 @@ const setData = (naps, dateObjs) => {
 };
 
 const setDayLabels = naps => {
-  const dates = naps.map(nap => nap.data.date);
+  const dates = naps.map(nap => nap.date);
   const earliestDate = dates[0];
   const latestDate = Number(new Date());
   const DAY_IN_MS = 24 * 60 * 60 * 1000;

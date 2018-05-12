@@ -4,7 +4,7 @@ const db = require("../db");
 /* /api/naps */
 router.get("/", (req, res) => {
   db.query('SELECT * FROM naps')
-    .then((data, err) => res.send(data.rows));
+    .then((data, err) => res.send(data.rows.map(row => row.data)));
 });
 
 router.post("/", (req, res) => {

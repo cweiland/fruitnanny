@@ -39,7 +39,7 @@ const VideoPlayer = props => (
 );
 
 VideoPlayer.propTypes = {
-  stream: PropTypes.instanceOf(MediaStream),
+  stream: PropTypes.instanceOf(window.MediaStream),
   isStreaming: PropTypes.bool.isRequired
 };
 

@@ -6,7 +6,7 @@ import Clock from "./components/Clock";
 import DataCards from "./components/DataCards";
 import DataChart from "./components/DataChart";
 import StreamContainer from "./components/StreamContainer";
-import fetchNaps from "./lib/fetchNaps";
+import { processNaps } from "./lib/utils/db";
 import fetchTemp from "./lib/fetchTemp";
 import calcElapsedTime from "./lib/calcElapsedTime";
 import saveNapData from "./lib/saveNapData";
@@ -51,16 +51,19 @@ class App extends Component {
     const manageTemp = () =>
       fetchTemp()
         .then(this.setTempState)
-        .catch(e => console.error(`Error retrieving temperature data: ${e}`));
+        .catch(e => console.error(`Error retrieving temperature data. ${e}`));
 
     // Update temperature on page load, then once a minute
     manageTemp();
     this.tempInterval = setInterval(manageTemp, 60 * 1000);
 
     // Manage naps data from database
-    fetchNaps()
+    // TODO: benefit from dropping off naps in state before processing to prevent having to drill them through?
+    fetch("/api/naps")
+      .then(resp => resp.json())
+      .then(processNaps)
       .then(this.setNapState)
-      .catch(e => console.error(`Error retrieving naps data: ${e}`));
+      .catch(e => console.error(`Error retrieving naps data. ${e}`));
   }
 
   componentWillUnmount() {
@@ -90,7 +93,11 @@ class App extends Component {
     const { temp, humidity, naptime } = this.state;
     this.setState({
       naps,
-      naptime: { ...naptime, cur: totalNaptimeToday, avg: `${avgNaptime}m` },
+      naptime: {
+        ...naptime,
+        cur: totalNaptimeToday !== null ? `${totalNaptimeToday}m` : "--",
+        avg: `${avgNaptime}m`
+      },
       temp: { ...temp, avg: `${avgTemp}°` },
       humidity: { ...humidity, avg: `${avgHumidity}%` }
     });
