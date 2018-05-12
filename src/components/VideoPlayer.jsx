@@ -1,4 +1,5 @@
 import React from "react";
+import { PropTypes } from "prop-types";
 
 // TODO: proptypes
 const VideoPlayer = props => (
@@ -36,5 +37,14 @@ const VideoPlayer = props => (
     </div>
   </figure>
 );
+
+VideoPlayer.propTypes = {
+  stream: PropTypes.instanceOf(MediaStream),
+  isStreaming: PropTypes.bool.isRequired
+};
+
+VideoPlayer.defaultProps = {
+  stream: null
+};
 
 export default VideoPlayer;

@@ -1,7 +1,7 @@
+import PropTypes from "prop-types";
 import React from "react";
 import colors from "../styles/colors";
 
-// TODO: proptypes
 const DataCard = props => {
   let bgColor;
   switch (props.type) {
@@ -28,6 +28,12 @@ const DataCard = props => {
       <span className="avg">Avg: {props.avg}</span>
     </div>
   );
+};
+
+DataCard.propTypes = {
+  type: PropTypes.oneOf(["Temperature", "Humidity", "Naptime"]).isRequired,
+  cur: PropTypes.string.isRequired,
+  avg: PropTypes.string.isRequired
 };
 
 export default DataCard;

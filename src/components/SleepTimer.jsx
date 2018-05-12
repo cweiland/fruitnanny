@@ -1,3 +1,4 @@
+import { PropTypes } from "prop-types";
 import React from "react";
 import * as zzz from "../assets/zzz.png";
 
@@ -26,5 +27,14 @@ const SleepTimer = props => (
     </div>
   </div>
 );
+
+SleepTimer.propTypes = {
+  elapsed: PropTypes.string.isRequired,
+  toggleTimer: PropTypes.func.isRequired,
+  isTiming: PropTypes.bool.isRequired,
+  resetTimer: PropTypes.func.isRequired,
+  start: PropTypes.number.isRequired,
+  saveTime: PropTypes.func.isRequired
+};
 
 export default SleepTimer;
