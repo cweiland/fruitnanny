@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-filename-extension */
-// TODO: index.js
 import React, { Component } from "react";
 import * as cherub from "./assets/cherub.png";
 import SleepTimer from "./components//SleepTimer";
@@ -7,10 +6,10 @@ import Clock from "./components/Clock";
 import DataCards from "./components/DataCards";
 import DataChart from "./components/DataChart";
 import StreamContainer from "./components/StreamContainer";
-import { fetchNaps } from "./lib/fetchNaps";
-import { fetchTemp } from "./lib/fetchTemp";
-import { getElapsedTime } from "./lib/getElapsedTime";
-import { saveNapData } from "./lib/saveNapData";
+import fetchNaps from "./lib/fetchNaps";
+import fetchTemp from "./lib/fetchTemp";
+import calcElapsedTime from "./lib/calcElapsedTime";
+import saveNapData from "./lib/saveNapData";
 
 class App extends Component {
   constructor(props) {
@@ -19,21 +18,9 @@ class App extends Component {
     // TODO: change state var names to be more descriptive
     this.state = {
       // Data cards
-      temp: {
-        type: "Temperature",
-        cur: "--",
-        avg: "--"
-      },
-      humidity: {
-        type: "Humidity",
-        cur: "--",
-        avg: "--"
-      },
-      naptime: {
-        type: "Naptime",
-        cur: "--",
-        avg: "--"
-      },
+      temp: { type: "Temperature", cur: "--", avg: "--" },
+      humidity: { type: "Humidity", cur: "--", avg: "--" },
+      naptime: { type: "Naptime", cur: "--", avg: "--" },
 
       // From database
       naps: [],
@@ -42,7 +29,7 @@ class App extends Component {
       timer: {
         start: 0,
         isTiming: false,
-        elapsed: "00:00:00",
+        elapsed: "00:00:00"
       },
 
       // Readings while nap timer is running
@@ -61,11 +48,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const manageTemp = () => (
+    const manageTemp = () =>
       fetchTemp()
         .then(this.setTempState)
-        .catch(e => console.error(`Error retrieving temperature data: ${e}`))
-    );
+        .catch(e => console.error(`Error retrieving temperature data: ${e}`));
 
     // Update temperature on page load, then once a minute
     manageTemp();
@@ -74,7 +60,7 @@ class App extends Component {
     // Manage naps data from database
     fetchNaps()
       .then(this.setNapState)
-      .catch(e => console.error(`Error retrieving naps data: ${e}`))
+      .catch(e => console.error(`Error retrieving naps data: ${e}`));
   }
 
   componentWillUnmount() {
@@ -94,7 +80,13 @@ class App extends Component {
   }
 
   setNapState(napsData) {
-    const { naps, totalNaptimeToday, avgNaptime, avgTemp, avgHumidity } = napsData;
+    const {
+      naps,
+      totalNaptimeToday,
+      avgNaptime,
+      avgTemp,
+      avgHumidity
+    } = napsData;
     const { temp, humidity, naptime } = this.state;
     this.setState({
       naps,
@@ -109,14 +101,14 @@ class App extends Component {
     let { start, isTiming } = timer;
 
     // Set start time and negate isTiming
-    start = (Number(new Date()) - start) || Number(new Date());
+    start = Number(new Date()) - start || Number(new Date());
     isTiming = !isTiming;
     timer = { ...timer, start, isTiming };
     this.setState({ timer });
 
     if (isTiming) {
       this.timerInterval = setInterval(() => {
-        timer.elapsed = getElapsedTime(start);
+        timer.elapsed = calcElapsedTime(start);
         this.setState({ timer });
       }, 1000);
     } else {
@@ -128,7 +120,7 @@ class App extends Component {
     // TODO: ensure all data points collected before saving (maybe setTimeout to give time to t/h)
     // TODO: reset elapsed after save
     // FIXME: if another quick start and save is execed after a save, temps and humids is empty, crashes
-    const { temps, humids, timer, naps } = this.state
+    const { temps, humids, timer, naps } = this.state;
     const { start } = timer;
 
     const reducer = (acc, cur) => acc + cur;
@@ -144,7 +136,7 @@ class App extends Component {
         ...timer,
         start: 0,
         isTiming: false,
-        elapsed: "00:00:00",
+        elapsed: "00:00:00"
       };
 
       this.setState({
@@ -184,7 +176,8 @@ class App extends Component {
             {...timer}
             toggleTimer={this.toggleTimer}
             resetTimer={this.resetTimer}
-            saveTime={this.saveTime} />
+            saveTime={this.saveTime}
+          />
         </div>
         <div className="data-pane">
           <Clock />

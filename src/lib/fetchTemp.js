@@ -1,4 +1,4 @@
-export const fetchTemp = async () => {
+const fetchTemp = async () => {
   const data = await (await fetch("/api/dht/current")).json();
 
   // DHT22 sensor may return {temperature: "Failed", humidity: "to"} if unsuccessful
@@ -15,5 +15,7 @@ export const fetchTemp = async () => {
   return {
     currentTemp,
     currentHumidity
-  }
+  };
 };
+
+export default fetchTemp;

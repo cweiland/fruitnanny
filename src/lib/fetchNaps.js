@@ -1,4 +1,4 @@
-export const fetchNaps = async () => {
+const fetchNaps = async () => {
   const naps = await (await fetch("/api/naps")).json();
   if (naps.length > 0) {
     const timesAll = [];
@@ -11,8 +11,10 @@ export const fetchNaps = async () => {
       humids.push(humidity);
       timesAll.push(length);
       const today = new Date();
-      const todayStart = Number(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-      const todayEnd = todayStart + (24 * 60 * 60 * 1000);
+      const todayStart = Number(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      );
+      const todayEnd = todayStart + 24 * 60 * 60 * 1000;
       if (date >= todayStart && date < todayEnd) {
         timesToday.push(length);
       }
@@ -23,10 +25,13 @@ export const fetchNaps = async () => {
     const reducer = (acc, cur) => acc + cur;
     const avgTemp = Math.round(temps.reduce(reducer) / naps.length);
     const avgHumidity = Math.round(humids.reduce(reducer) / naps.length);
-    const avgNaptime = Math.round(timesAll.reduce(reducer) / timesAll.length / 60);
-    const totalNaptimeToday = timesToday.length > 0
-      ? `${Math.round(timesToday.reduce(reducer) / 60)}m`
-      : "--";
+    const avgNaptime = Math.round(
+      timesAll.reduce(reducer) / timesAll.length / 60
+    );
+    const totalNaptimeToday =
+      timesToday.length > 0
+        ? `${Math.round(timesToday.reduce(reducer) / 60)}m`
+        : "--";
 
     return {
       naps,
@@ -34,6 +39,11 @@ export const fetchNaps = async () => {
       avgNaptime,
       avgTemp,
       avgHumidity
-    }
+    };
   }
-}
+
+  // TODO: error handling on caller
+  return null;
+};
+
+export default fetchNaps;

@@ -1,6 +1,7 @@
 import React from "react";
 import colors from "../styles/colors";
 
+// TODO: proptypes
 const DataCard = props => {
   let bgColor;
   switch (props.type) {

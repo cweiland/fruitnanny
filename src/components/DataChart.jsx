@@ -1,19 +1,22 @@
-import React from 'react';
+import React from "react";
 import { Line as LineChart } from "react-chartjs";
 
+// TODO: refactor business logic
+// TODO: proptypes
 const setData = (naps, dateObjs) => {
   const temps = [];
   const humids = [];
   const lengths = [];
 
-  const dateFilter = (naps, date) => {
-    return naps.filter(nap => {
+  const dateFilter = (naps, date) =>
+    naps.filter(nap => {
       const napDate = new Date(date);
-      const lo = Number(new Date(napDate.getFullYear(), napDate.getMonth(), napDate.getDate()));
-      const hi = Number(new Date(lo + (24 * 60 * 60 * 1000) - 1));
+      const lo = Number(
+        new Date(napDate.getFullYear(), napDate.getMonth(), napDate.getDate())
+      );
+      const hi = Number(new Date(lo + 24 * 60 * 60 * 1000 - 1));
       return nap.data.date >= lo && nap.data.date < hi;
     });
-  };
 
   if (naps.length > 0) {
     dateObjs.forEach(date => {
@@ -29,67 +32,71 @@ const setData = (naps, dateObjs) => {
       });
 
       lengths.push(
-        dayLengths.length > 0 ?
-          Math.round(dayLengths.reduce((acc, cur) => acc + cur)) :
-          null
+        dayLengths.length > 0
+          ? Math.round(dayLengths.reduce((acc, cur) => acc + cur))
+          : null
       );
 
       humids.push(
-        dayHumids.length > 0 ?
-          Math.round(dayHumids.reduce((acc, cur) => acc + cur) / napsOnDate.length) :
-          null
+        dayHumids.length > 0
+          ? Math.round(
+              dayHumids.reduce((acc, cur) => acc + cur) / napsOnDate.length
+            )
+          : null
       );
 
       temps.push(
-        dayTemps.length > 0 ?
-          Math.round(dayTemps.reduce((acc, cur) => acc + cur) / napsOnDate.length) :
-          null
+        dayTemps.length > 0
+          ? Math.round(
+              dayTemps.reduce((acc, cur) => acc + cur) / napsOnDate.length
+            )
+          : null
       );
     });
   }
 
   const data = [
     {
-      label: 'Avg Temp',
-      fillColor: 'rgba(254,250,192,0.2)',
-      strokeColor: 'rgba(254,250,192,1)',
-      pointColor: 'rgba(254,250,192,1)',
-      pointStrokeColor: '#fff',
-      pointHighlightFill: '#fff',
-      pointHighlightStroke: 'rgba(254,250,192,1)',
-      data: temps,
+      label: "Avg Temp",
+      fillColor: "rgba(254,250,192,0.2)",
+      strokeColor: "rgba(254,250,192,1)",
+      pointColor: "rgba(254,250,192,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(254,250,192,1)",
+      data: temps
     },
     {
-      label: 'Avg Humidity',
-      fillColor: 'rgba(168,198,250,0.2)',
-      strokeColor: 'rgba(168,198,250,1)',
-      pointColor: 'rgba(168,198,250,1)',
-      pointStrokeColor: '#fff',
-      pointHighlightFill: '#fff',
-      pointHighlightStroke: 'rgba(168,198,250,1)',
-      data: humids,
+      label: "Avg Humidity",
+      fillColor: "rgba(168,198,250,0.2)",
+      strokeColor: "rgba(168,198,250,1)",
+      pointColor: "rgba(168,198,250,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(168,198,250,1)",
+      data: humids
     },
     {
-      label: 'Total Naptime (mins)',
-      fillColor: 'rgba(203,232,186,0.2)',
-      strokeColor: 'rgba(203,232,186,1)',
-      pointColor: 'rgba(203,232,186,1)',
-      pointStrokeColor: '#fff',
-      pointHighlightFill: '#fff',
-      pointHighlightStroke: 'rgba(203,232,186,1)',
-      data: lengths,
-    },
+      label: "Total Naptime (mins)",
+      fillColor: "rgba(203,232,186,0.2)",
+      strokeColor: "rgba(203,232,186,1)",
+      pointColor: "rgba(203,232,186,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(203,232,186,1)",
+      data: lengths
+    }
   ];
 
   return data;
-}
+};
 
 const options = {
   // /Boolean - Whether grid lines are shown across the chart
   scaleShowGridLines: true,
 
   // String - Colour of the grid lines
-  scaleGridLineColor: 'rgba(0,0,0,.05)',
+  scaleGridLineColor: "rgba(0,0,0,.05)",
 
   // Number - Width of the grid lines
   scaleGridLineWidth: 1,
@@ -125,7 +132,7 @@ const options = {
   datasetStrokeWidth: 3,
 
   // Boolean - Whether to fill the dataset with a colour
-  datasetFill: true,
+  datasetFill: true
 
   // String - A legend template
   // legendTemplate: '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].strokeColor%>">' +
@@ -142,7 +149,7 @@ const setDayLabels = naps => {
   const dateObjs = []; // A date object for each day in day span
 
   for (let i = 0; i <= DAYS_SPAN; i += 1) {
-    const thisDate = new Date(earliestDate + (i * DAY_IN_MS));
+    const thisDate = new Date(earliestDate + i * DAY_IN_MS);
     const dateStr = `${thisDate.getMonth() + 1}/${thisDate.getDate()}`;
     dateObjs.push(thisDate);
     dayLabels.push(dateStr);
@@ -155,7 +162,7 @@ const DataChart = props => {
   const [dayLabels, dateObjs] = setDayLabels(props.naps);
   const data = {
     labels: dayLabels,
-    datasets: setData(props.naps, dateObjs),
+    datasets: setData(props.naps, dateObjs)
   };
 
   return (
@@ -163,6 +170,6 @@ const DataChart = props => {
       <LineChart data={data} options={options} width="640" height="474" />
     </div>
   );
-}
+};
 
 export default DataChart;

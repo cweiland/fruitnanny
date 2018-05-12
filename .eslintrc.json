@@ -4,7 +4,8 @@
         "import/no-unresolved": 0,
         "import/extensions": 0,
         "react/sort-comp": 0,
-        "jsx-a11y/media-has-caption": 0
+        "jsx-a11y/media-has-caption": 0,
+        "no-plusplus": 0
     },
     "env": {
         "jest": true,

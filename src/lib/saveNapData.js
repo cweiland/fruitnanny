@@ -1,4 +1,4 @@
-export const saveNapData = async (avgTemp, avgHumidity, napLength) => {
+const saveNapData = async (avgTemp, avgHumidity, napLength) => {
   const body = JSON.stringify({
     date: Number(new Date()),
     length: napLength,
@@ -8,9 +8,11 @@ export const saveNapData = async (avgTemp, avgHumidity, napLength) => {
 
   const newNap = await fetch("/api/naps", {
     body,
-    headers: { 'content-type': 'application/json' },
-    method: 'POST'
+    headers: { "content-type": "application/json" },
+    method: "POST"
   }).then(resp => resp.json());
 
   return newNap;
-}
+};
+
+export default saveNapData;

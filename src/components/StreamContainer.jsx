@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Janus from "../lib/janus";
-import VideoPlayer from "./VideoPlayer";
 import AudioWidget from "./AudioWidget";
+import VideoPlayer from "./VideoPlayer";
 
 export default class StreamContainer extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ export default class StreamContainer extends Component {
 
   componentDidMount() {
     Janus.init({
-      debug: true,
+      debug: false,
       callback: this.createSession.bind(this)
     });
   }
@@ -36,7 +36,7 @@ export default class StreamContainer extends Component {
           Janus.error(error);
           window.alert(error);
         },
-        destroyed: () => { }
+        destroyed: () => {}
       });
     }
   }
@@ -159,11 +159,11 @@ export default class StreamContainer extends Component {
   render() {
     return (
       <div>
-      <VideoPlayer
-        stream={this.state.stream}
-        isStreaming={this.state.isStreaming}
-      />
-      {this.state.stream ? <AudioWidget stream={this.state.stream} /> : null}
+        <VideoPlayer
+          stream={this.state.stream}
+          isStreaming={this.state.isStreaming}
+        />
+        {this.state.stream ? <AudioWidget stream={this.state.stream} /> : null}
       </div>
     );
   }

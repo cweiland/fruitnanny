@@ -1,7 +1,8 @@
 import React from "react";
 import * as zzz from "../assets/zzz.png";
 
-const SleepTimer = (props) => (
+// TODO: proptypes
+const SleepTimer = props => (
   <div className="sleep-timer-container">
     <img alt="zzz" className="zzz-image" src={zzz} />
     <span>{props.elapsed}</span>

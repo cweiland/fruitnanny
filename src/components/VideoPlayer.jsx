@@ -1,5 +1,6 @@
 import React from "react";
 
+// TODO: proptypes
 const VideoPlayer = props => (
   <figure id="videoContainer" className="vidContainer" data-fullscreen="false">
     {/* eslint-disable-line */}
@@ -10,7 +11,12 @@ const VideoPlayer = props => (
       <div id="fs-audiolevel" />
     </div>
 
-    <div id="video-controls" className="controls" style={props.isStreaming ? null : {display: 'none'}} data-state="hidden">
+    <div
+      id="video-controls"
+      className="controls"
+      style={props.isStreaming ? null : { display: "none" }}
+      data-state="hidden"
+    >
       <button id="playpause" type="button" data-state="play">
         <i className="fa fa-play" aria-hidden="true" />
       </button>
