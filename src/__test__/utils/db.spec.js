@@ -184,12 +184,6 @@ describe("calculateNapAverages()", () => {
 });
 
 describe("processNaps()", () => {
-  // let returnData;
-  // beforeEach(() => {
-  //   spy = jest.fn(parseNapsData);
-  //   returnData = processNaps(naps, spy(naps));
-  // });
-
   it("should return output of calculateNapAverages when naps.length is greater than zero", () => {
     const returnData = processNaps(naps);
     const expected = calculateNapAverages(naps, parseNapsData(naps));

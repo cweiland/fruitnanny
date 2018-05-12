@@ -10,7 +10,7 @@ const processTemp = data => {
   };
 };
 
-const fetchTemps = () =>
+const fetchTemp = () =>
   fetch("/api/dht/current")
     .then(resp => resp.json())
     .then(data => {
@@ -19,6 +19,7 @@ const fetchTemps = () =>
       }
       return data;
     })
-    .then(processTemp);
+    .then(processTemp)
+    .catch(e => console.error(`Error retrieving temperature data. ${e}`));
 
-export default fetchTemps;
+export { processTemp, fetchTemp };

@@ -69,4 +69,3 @@ const fetchNaps = () =>
     .catch(e => console.error(`Error retrieving naps data. ${e}`));
 
 export { parseNapsData, calculateNapAverages, processNaps, fetchNaps };
-export default fetchNaps;

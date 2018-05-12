@@ -8,8 +8,8 @@ import DataChart from "./components/DataChart";
 import StreamContainer from "./components/StreamContainer";
 import calcElapsedTime from "./lib/calcElapsedTime";
 import saveNapData from "./lib/saveNapData";
-import fetchNaps from "./lib/utils/db";
-import fetchTemps from "./lib/utils/temp";
+import { fetchNaps } from "./lib/utils/db";
+import { fetchTemp } from "./lib/utils/temp";
 
 class App extends Component {
   constructor(props) {
@@ -64,11 +64,10 @@ class App extends Component {
   }
 
   updateTemp() {
-    fetchTemps()
+    fetchTemp()
       .then(this.setTempState)
       .catch(e => {
-        console.error(`Error retrieving temperature data. ${e}`);
-        if (e === "DHT22 sensor failed.") {
+        if (e.includes("DHT22 sensor failed.")) {
           // Happens occasionally. Try again.
           this.updateTemp();
         }
