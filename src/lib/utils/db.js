@@ -63,7 +63,7 @@ const processNaps = naps =>
   naps.length > 0 ? calculateNapAverages(naps, parseNapsData(naps)) : null;
 
 const fetchNaps = () =>
-  fetch("/api/napss")
+  fetch("/api/naps")
     .then(resp => resp.json())
     .then(processNaps)
     .catch(e => console.error(`Error retrieving naps data. ${e}`));

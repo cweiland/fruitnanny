@@ -24,9 +24,9 @@ describe("fetchNaps()", () => {
     fetch.resetMocks();
   });
 
-  it("should attempt to fetch data from API", () => {
+  it("should attempt to fetch data from correct API endpoint", () => {
     fetch.mockResponseOnce(JSON.stringify(naps));
-    fetchNaps().then(() => expect(fetch).toHaveBeenCalledTimes(1));
+    fetchNaps().then(() => expect(fetch).toHaveBeenCalledWith("/api/naps"));
   });
 
   describe("on success", () => {

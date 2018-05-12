@@ -13,9 +13,11 @@ describe("fetchTemp()", () => {
     fetch.resetMocks();
   });
 
-  it("should attempt to fetch temperature data from the API", () => {
+  it("should attempt to fetch temperature data from the correct API endpoint", () => {
     fetch.mockResponseOnce(JSON.stringify(data));
-    fetchTemp().then(() => expect(fetch).toHaveBeenCalledTimes(1));
+    fetchTemp().then(() =>
+      expect(fetch).toHaveBeenCalledWith("/api/dht/current")
+    );
   });
 
   describe("on success", () => {
