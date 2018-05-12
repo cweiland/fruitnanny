@@ -40,7 +40,7 @@ describe("fetchTemp()", () => {
     });
 
     it("should throw correct error if DHT22 sensor fails", async () => {
-      const failedData = { ...data, temperature: "Failed"};
+      const failedData = { ...data, temperature: "Failed" };
       fetch.mockResponseOnce(JSON.stringify(failedData));
       let result;
       try {
@@ -65,5 +65,5 @@ describe("processTemp()", () => {
 
   it("should round the current humidity", () => {
     expect(returnData.currentHumidity).toBe(40);
-  })
+  });
 });
