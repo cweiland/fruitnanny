@@ -10,9 +10,16 @@
     "eject": "react-scripts eject",
     "start-api": "node server/app.js"
   },
-  "proxy": "http://localhost/",
   "author": "Dmitry Ivanov, Alexander Russell, Davy Marrero",
   "license": "MIT",
+  "proxy": "http://localhost/",
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/node_modules/",
+      "!src/lib/janus.js"
+    ]
+  },
   "dependencies": {
     "chart.js": "^1.1.1",
     "enzyme": "^3.3.0",
