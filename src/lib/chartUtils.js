@@ -95,7 +95,7 @@ const setDayLabels = naps => {
   const dayLabels = [];
   const dateObjs = []; // A date object for each day in day span
 
-  for (let i = 0; i <= DAYS_SPAN; i += 1) {
+  for (let i = 0; i < DAYS_SPAN; i += 1) {
     const thisDate = new Date(earliestDate + i * DAY_IN_MS);
     const dateStr = `${thisDate.getMonth() + 1}/${thisDate.getDate()}`;
     dateObjs.push(thisDate);
