@@ -181,7 +181,7 @@ class App extends Component {
             <span className="feed-header">Lily Evelyn Marrero</span>
             <img alt="cherub" className="cherub-image" src={cherub} />
             <StreamContainer
-              {...timer}
+              timer={timer}
               toggleTimer={this.toggleTimer}
               resetTimer={this.resetTimer}
               saveTime={this.saveTime}
