@@ -3,8 +3,7 @@ import AudioSpectrum from "./AudioSpectrum";
 
 const AudioWidget = () => (
   <AudioSpectrum
-    className="audio-spectrum"
-    height={270}
+    height={200}
     width={640}
     audioId="video"
     capColor="violetred"

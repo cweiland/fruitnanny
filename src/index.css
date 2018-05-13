@@ -42,10 +42,6 @@ body {
   right: -510px;
   transform: rotate(-48deg)
 }
-.feed {
-  position: relative;
-  top: -306px;
-}
 
 .sleep-timer-container {
   width: 100%;
@@ -93,10 +89,10 @@ button:active {
   background-color: var(--success);
 }
 
-.audio-spectrum {
+/* .audio-spectrum {
   position: relative;
   top: -200px;
-}
+} */
 
 /* DATA SIDE */
 .data-pane {

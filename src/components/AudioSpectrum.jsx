@@ -180,7 +180,6 @@ class AudioSpectrum extends Component {
   render() {
     return (
       <canvas
-        style={{ position: "relative", top: "-300px" }}
         id={this.canvasId}
         width={this.props.width}
         height={this.props.height}

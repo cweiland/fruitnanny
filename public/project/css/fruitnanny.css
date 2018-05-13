@@ -1,7 +1,5 @@
 
 figure {
-  position: relative;
-  top: -306px;
   width: 100%;
   -webkit-margin-before: 0;
   -webkit-margin-after: 0;
@@ -225,7 +223,8 @@ body {
   right: -510px;
   transform: rotate(-49deg)
 }
-.feed {
+
+.stream-container {
   position: relative;
   top: -306px;
 }
@@ -290,6 +289,13 @@ button:active {
 .data-pane {
   width: 640px;
 }
+
+@media only screen and (max-width : 1346px) {
+  .data-pane {
+    margin-top: 320px;
+  }
+}
+
 .clock-container {
   text-align: center;
   font-size: 60px;

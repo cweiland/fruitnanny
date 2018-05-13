@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-filename-extension */
 import React, { Component } from "react";
 import * as cherub from "./assets/cherub.png";
-import SleepTimer from "./components//SleepTimer";
 import Clock from "./components/Clock";
 import DataCards from "./components/DataCards";
 import DataChart from "./components/DataChart";
@@ -60,7 +59,7 @@ class App extends Component {
   updateNaps() {
     fetchNaps()
       .then(this.setNapState)
-      .catch(() => {}); // Handled in fetchNaps
+      .catch(() => { }); // Handled in fetchNaps
   }
 
   updateTemp() {
@@ -181,14 +180,13 @@ class App extends Component {
           <div className="monitor-feed">
             <span className="feed-header">Lily Evelyn Marrero</span>
             <img alt="cherub" className="cherub-image" src={cherub} />
-            <StreamContainer />
+            <StreamContainer
+              {...timer}
+              toggleTimer={this.toggleTimer}
+              resetTimer={this.resetTimer}
+              saveTime={this.saveTime}
+            />
           </div>
-          <SleepTimer
-            {...timer}
-            toggleTimer={this.toggleTimer}
-            resetTimer={this.resetTimer}
-            saveTime={this.saveTime}
-          />
         </div>
         <div className="data-pane">
           <Clock />

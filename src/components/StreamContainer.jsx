@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Janus from "../lib/janus";
 import AudioWidget from "./AudioWidget";
 import VideoPlayer from "./VideoPlayer";
+import SleepTimer from "./SleepTimer";
 
 export default class StreamContainer extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ export default class StreamContainer extends Component {
           Janus.error(error);
           window.alert(error);
         },
-        destroyed: () => {}
+        destroyed: () => { }
       });
     }
   }
@@ -158,10 +159,16 @@ export default class StreamContainer extends Component {
 
   render() {
     return (
-      <div>
+      <div className="stream-container">
         <VideoPlayer
           stream={this.state.stream}
           isStreaming={this.state.isStreaming}
+        />
+        <SleepTimer
+          {...this.props.timer}
+          toggleTimer={this.props.toggleTimer}
+          resetTimer={this.props.resetTimer}
+          saveTime={this.props.saveTime}
         />
         {this.state.stream ? <AudioWidget stream={this.state.stream} /> : null}
       </div>
