@@ -171,6 +171,13 @@ cd /opt/nginx-$NGINX_VERSION
 make
 make install
 
+# Install postgresql
+apt-get -y install postgresql libpq-dev postgresql-client 
+postgresql-client-common -y
+su -c "createuser pi --createdb --createrole --no-superuser" postgres
+su -c "createdb fruitnanny" postgres
+psql -d fruitnanny -c "CREATE TABLE naps (id serial NOT NULL PRIMARY KEY, data json NOT NULL);"
+
 # Configure the nginx service
 update-rc.d nginx disable
 ln -s /opt/fruitnanny/configuration/systemd/nginx.service /etc/systemd/system/
