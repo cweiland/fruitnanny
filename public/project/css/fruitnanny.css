@@ -209,24 +209,24 @@ body {
 }
 .feed-header {
   font-family: 'Lobster', cursive;
-  font-size: 60px;
+  font-size: 63px;
   position: relative;
-  top: -64px;
+  top: -66px;
   z-index: 1;
-  text-shadow: 2px 3px 10px rgba(152,112,112,0.2);
+  text-shadow: 1px 3px 15px rgba(152,112,112,0.65);
 }
 .cherub-image {
-  width: 224px;
-  height: 224px;
+  width: 215px;
+  height: 215px;
   position: relative;
-  top: -223px;
-  right: -510px;
-  transform: rotate(-49deg)
+  top: -220px;
+  right: -517px;
+  transform: rotate(-48deg)
 }
 
 .stream-container {
   position: relative;
-  top: -306px;
+  top: -301px;
 }
 
 .sleep-timer-container {
