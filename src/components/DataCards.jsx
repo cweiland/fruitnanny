@@ -19,13 +19,13 @@ DataCards.propTypes = {
 
   temp: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    cur: PropTypes.string.isRequired,
+    cur: PropTypes.number.isRequired,
     avg: PropTypes.string.isRequired
   }).isRequired,
 
   humidity: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    cur: PropTypes.string.isRequired,
+    cur: PropTypes.number.isRequired,
     avg: PropTypes.string.isRequired
   }).isRequired
 };

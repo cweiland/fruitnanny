@@ -80,8 +80,8 @@ class App extends Component {
     this.setState({
       temps: newTemps,
       humids: newHumidities,
-      temp: { ...temp, cur: `${currentTemp}°` },
-      humidity: { ...humidity, cur: `${currentHumidity}%` }
+      temp: { ...temp, cur: currentTemp },
+      humidity: { ...humidity, cur: currentHumidity }
     });
   }
 
@@ -133,10 +133,10 @@ class App extends Component {
     // FIXME: if another quick start and save is execed after a save, temps and humids is empty, crashes
     const { temps, humids, timer, naps } = this.state;
     const { start } = timer;
-
+    
     const reducer = (acc, cur) => acc + cur;
-    const avgTemp = Math.round(temps.reduce(reducer) / temps.length);
-    const avgHumidity = Math.round(humids.reduce(reducer) / humids.length);
+    const avgTemp = temps.length > 0 ? Math.round(temps.reduce(reducer) / temps.length) : this.state.temp.cur;
+    const avgHumidity = humids.length > 0 ? Math.round(humids.reduce(reducer) / humids.length) : this.state.humidity.cur;
     const napLength = Math.round(start / 1000);
 
     try {
