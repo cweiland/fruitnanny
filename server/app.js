@@ -1,12 +1,11 @@
-"use strict";
+
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = require("../fruitnanny_config");
 const express = require("express");
 const dht = require("./routes/dht");
 const light = require("./routes/light");
 const db = require("./routes/db");
-
-const router = express.Router();
 
 const app = express();
 app.use(express.static("build"));
@@ -16,14 +15,13 @@ app.use("/api/dht", dht.default);
 app.use("/api/naps", db.default);
 
 // Postgresql
-// TODO: refactor
-const { Client } = require('pg');
+const { Client } = require("pg");
 
 const client = new Client({
-  connectionString: 'postgresql://pi:fruitnanny@localhost:5432/fruitnanny',
+  connectionString: "postgresql://pi:fruitnanny@localhost:5432/fruitnanny"
 });
 
-client.connect(() => console.log('Connected to postgresql'));
+client.connect(() => console.log("Connected to postgresql"));
 
 app.listen(7000, () => {
   console.log("Fruitnanny app listening on port 7000!");

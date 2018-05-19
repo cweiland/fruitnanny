@@ -5,7 +5,7 @@ import DataCard from "./DataCard";
 const DataCards = props => (
   <div className="card-container">
     <DataCard {...props.naptime} />
-    <DataCard {...props.temp} />
+    <DataCard {...props.temperature} />
     <DataCard {...props.humidity} />
   </div>
 );
@@ -13,20 +13,20 @@ const DataCards = props => (
 DataCards.propTypes = {
   naptime: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    cur: PropTypes.string.isRequired,
-    avg: PropTypes.string.isRequired
+    current: PropTypes.number,
+    average: PropTypes.number
   }).isRequired,
 
-  temp: PropTypes.shape({
+  temperature: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    cur: PropTypes.number.isRequired,
-    avg: PropTypes.string.isRequired
+    current: PropTypes.number,
+    average: PropTypes.number
   }).isRequired,
 
   humidity: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    cur: PropTypes.number.isRequired,
-    avg: PropTypes.string.isRequired
+    current: PropTypes.number,
+    average: PropTypes.number
   }).isRequired
 };
 

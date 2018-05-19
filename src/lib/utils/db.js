@@ -51,7 +51,7 @@ const calculateNapAverages = (naps, parsedNapData) => {
       : null;
 
   return {
-    naps,
+    savedNaps: naps,
     totalNaptimeToday,
     avgNaptime,
     avgTemp,

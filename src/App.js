@@ -17,12 +17,12 @@ class App extends Component {
     // TODO: change state var names to be more descriptive
     this.state = {
       // Data cards
-      temp: { type: "Temperature", cur: "--", avg: "--" },
-      humidity: { type: "Humidity", cur: "--", avg: "--" },
-      naptime: { type: "Naptime", cur: "--", avg: "--" },
+      temperature: { type: "Temperature", current: null, average: null },
+      humidity: { type: "Humidity", current: null, average: null },
+      naptime: { type: "Naptime", current: null, average: null },
 
       // From database
-      naps: [],
+      savedNaps: [],
 
       // Nap timer
       timer: {
@@ -32,8 +32,8 @@ class App extends Component {
       },
 
       // Readings while nap timer is running
-      temps: [],
-      humids: []
+      napTemperatures: [],
+      napHumidities: []
     };
 
     this.timerInterval = null;
@@ -59,14 +59,14 @@ class App extends Component {
   updateNaps() {
     fetchNaps()
       .then(this.setNapState)
-      .catch(() => { }); // Handled in fetchNaps
+      .catch(() => {}); // Handled in fetchNaps
   }
 
   updateTemp() {
     fetchTemp()
       .then(this.setTempState)
       .catch(e => {
-        if (e.includes("DHT22 sensor failed.")) {
+        if (e.message.includes("DHT22 sensor failed.")) {
           // Happens occasionally. Try again.
           this.updateTemp();
         }
@@ -74,35 +74,49 @@ class App extends Component {
   }
 
   setTempState({ currentTemp, currentHumidity }) {
-    const { temp, humidity, temps, humids } = this.state;
-    const newTemps = [...temps, currentTemp];
-    const newHumidities = [...humids, currentHumidity];
-    this.setState({
-      temps: newTemps,
-      humids: newHumidities,
-      temp: { ...temp, cur: currentTemp },
-      humidity: { ...humidity, cur: currentHumidity }
-    });
+    const {
+      temperature,
+      humidity,
+      napTemperatures,
+      napHumidities,
+      timer
+    } = this.state;
+    if (timer.isTiming) {
+      // Begin building temperature data arrays if a nap is underway
+      const newTemps = [...napTemperatures, currentTemp];
+      const newHumidities = [...napHumidities, currentHumidity];
+      this.setState({
+        napTemperatures: newTemps,
+        napHumidities: newHumidities,
+        temperature: { ...temperature, current: currentTemp },
+        humidity: { ...humidity, current: currentHumidity }
+      });
+    } else {
+      this.setState({
+        temperature: { ...temperature, current: currentTemp },
+        humidity: { ...humidity, current: currentHumidity }
+      });
+    }
   }
 
   setNapState(napsData) {
     const {
-      naps,
+      savedNaps,
       totalNaptimeToday,
       avgNaptime,
       avgTemp,
       avgHumidity
     } = napsData;
-    const { temp, humidity, naptime } = this.state;
+    const { temperature, humidity, naptime } = this.state;
     this.setState({
-      naps,
+      savedNaps,
       naptime: {
         ...naptime,
-        cur: totalNaptimeToday !== null ? `${totalNaptimeToday}m` : "--",
-        avg: `${avgNaptime}m`
+        cur: totalNaptimeToday,
+        avg: avgNaptime
       },
-      temp: { ...temp, avg: `${avgTemp}°` },
-      humidity: { ...humidity, avg: `${avgHumidity}%` }
+      temperature: { ...temperature, average: avgTemp },
+      humidity: { ...humidity, average: avgHumidity }
     });
   }
 
@@ -131,17 +145,23 @@ class App extends Component {
     // TODO: ensure all data points collected before saving (maybe setTimeout to give time to t/h)
     // TODO: reset elapsed after save
     // FIXME: if another quick start and save is execed after a save, temps and humids is empty, crashes
-    const { temps, humids, timer, naps } = this.state;
+    const { napTemperatures, napHumidities, timer, savedNaps } = this.state;
     const { start } = timer;
-    
+
     const reducer = (acc, cur) => acc + cur;
-    const avgTemp = temps.length > 0 ? Math.round(temps.reduce(reducer) / temps.length) : this.state.temp.cur;
-    const avgHumidity = humids.length > 0 ? Math.round(humids.reduce(reducer) / humids.length) : this.state.humidity.cur;
+    const avgTemp =
+      napTemperatures.length > 0
+        ? Math.round(napTemperatures.reduce(reducer) / napTemperatures.length)
+        : this.state.temperature.cur;
+    const avgHumidity =
+      napHumidities.length > 0
+        ? Math.round(napHumidities.reduce(reducer) / napHumidities.length)
+        : this.state.humidity.cur;
     const napLength = Math.round(start / 1000);
 
     try {
       const newNap = await saveNapData(avgTemp, avgHumidity, napLength);
-      const updatedNaps = [...naps, newNap];
+      const updatedNaps = [...savedNaps, newNap];
 
       const resetTimer = {
         ...timer,
@@ -151,10 +171,10 @@ class App extends Component {
       };
 
       this.setState({
-        naps: updatedNaps,
+        savedNaps: updatedNaps,
         timer: resetTimer,
-        temps: [],
-        humids: []
+        napTemperatures: [],
+        napHumidities: []
       });
     } catch (e) {
       console.error(`Unable to save new nap: ${e}`);
@@ -173,7 +193,7 @@ class App extends Component {
   }
 
   render() {
-    const { temp, humidity, naptime, timer, naps } = this.state;
+    const { temperature, humidity, naptime, timer, savedNaps } = this.state;
     return (
       <div className="app">
         <div>
@@ -190,8 +210,12 @@ class App extends Component {
         </div>
         <div className="data-pane">
           <Clock />
-          <DataCards temp={temp} humidity={humidity} naptime={naptime} />
-          <DataChart naps={naps} />
+          <DataCards
+            temperature={temperature}
+            humidity={humidity}
+            naptime={naptime}
+          />
+          <DataChart naps={savedNaps} />
         </div>
       </div>
     );

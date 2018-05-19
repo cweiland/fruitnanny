@@ -126,9 +126,9 @@ describe("calculateNapAverages()", () => {
     expect(typeof returnData).toBe("object");
   });
 
-  describe("naps property", () => {
-    it("should equal naps argument sent into function (to be passed to component)", () => {
-      expect(returnData.naps).toEqual(naps);
+  describe("savedNaps property", () => {
+    it("should equal naps argument sent into function", () => {
+      expect(returnData.savedNaps).toEqual(naps);
     });
   });
 

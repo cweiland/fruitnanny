@@ -2,14 +2,13 @@ import * as React from "react";
 import { shallow } from "enzyme";
 import App from "../App";
 
-describe("after mounting", () => {
-  let component;
-  let fetchNaps;
+describe("updateTemp()", () => {
+  let wrapper;
   beforeEach(() => {
-    component = shallow(<App />);
+    wrapper = shallow(<App />);
   });
 
-  it("should fetch naps data from database", () => {
-    // expect(global.fetch).toHaveBeenCalled();
+  it("should render", () => {
+    expect(wrapper).toBeTruthy();
   });
 });
