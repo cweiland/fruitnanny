@@ -16,6 +16,7 @@ const setData = (naps, dateObjs) => {
   if (naps.length > 0) {
     dateObjs.forEach(date => {
       const napsOnDate = dateFilter(date);
+      console.log(napsOnDate);
       const dayTemps = [];
       const dayHumids = [];
       const dayLengths = [];

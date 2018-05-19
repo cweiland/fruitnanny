@@ -112,8 +112,8 @@ class App extends Component {
       savedNaps,
       naptime: {
         ...naptime,
-        cur: totalNaptimeToday,
-        avg: avgNaptime
+        current: totalNaptimeToday,
+        average: avgNaptime
       },
       temperature: { ...temperature, average: avgTemp },
       humidity: { ...humidity, average: avgHumidity }
@@ -152,16 +152,16 @@ class App extends Component {
     const avgTemp =
       napTemperatures.length > 0
         ? Math.round(napTemperatures.reduce(reducer) / napTemperatures.length)
-        : this.state.temperature.cur;
+        : this.state.temperature.current;
     const avgHumidity =
       napHumidities.length > 0
         ? Math.round(napHumidities.reduce(reducer) / napHumidities.length)
-        : this.state.humidity.cur;
+        : this.state.humidity.current;
     const napLength = Math.round(start / 1000);
 
     try {
       const newNap = await saveNapData(avgTemp, avgHumidity, napLength);
-      const updatedNaps = [...savedNaps, newNap];
+      const updatedNaps = [...savedNaps, newNap.data];
 
       const resetTimer = {
         ...timer,
