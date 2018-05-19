@@ -66,7 +66,7 @@ class App extends Component {
     fetchTemp()
       .then(this.setTempState)
       .catch(e => {
-        if (e.message.includes("DHT22 sensor failed.")) {
+        if (e.message.includes("DHT22 sensor failed")) {
           // Happens occasionally. Try again.
           this.updateTemp();
         }

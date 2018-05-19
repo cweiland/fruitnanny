@@ -19,7 +19,6 @@ const fetchTemp = () =>
       }
       return data;
     })
-    .then(processTemp)
-    .catch(e => console.error(`Error retrieving temperature data. ${e}`));
+    .then(processTemp);
 
 export { processTemp, fetchTemp };
