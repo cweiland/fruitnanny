@@ -24,7 +24,7 @@
     "chart.js": "^1.1.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "express": "^4.14.0",
+    "express": "^4.17.3",
     "pg": "^7.4.1",
     "react": "^16.3.1",
     "react-audio-spectrum": "^0.0.9",
